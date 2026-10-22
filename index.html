@@ -1,1 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6b8cb">
+  <meta name="description" content="PawDay: organize os cuidados, a rotina, a alimentação e a saúde dos seus pets.">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icons/pawday-192.png">
+  <title>PawDay — rotina de pets</title>
+  <style>
+    :root{--pink:#f6b8cb;--pink2:#ffe3ec;--rose:#b94e73;--cream:#fffaf4;--ink:#4b3b42;--muted:#8b7880;--white:#fff;--line:#f0dce3;--green:#cde8d4;--yellow:#fff0bd;--shadow:0 8px 24px #8b536014}
+    *{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
+    .app{max-width:1050px;margin:auto;padding:16px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 2px 18px}
+    .brand{display:flex;align-items:center;gap:10px}.logo{width:48px;height:48px;border-radius:17px;background:var(--pink2);display:grid;place-items:center;font-size:27px}
+    h1{font-size:1.55rem;margin:0;color:var(--rose)}.sub{font-size:.86rem;color:var(--muted);margin-top:2px}
+    .date-pill{background:#fff;border:1px solid var(--line);padding:9px 12px;border-radius:999px;font-size:.84rem;color:var(--muted)}
+    .layout{display:grid;grid-template-columns:220px 1fr;gap:18px}
+    nav{background:#fff;border:1px solid var(--line);padding:10px;border-radius:24px;height:max-content;box-shadow:var(--shadow);position:sticky;top:12px}
+    .navbtn{display:flex;align-items:center;gap:10px;width:100%;padding:12px;border-radius:15px;background:transparent;color:var(--ink);text-align:left;margin:2px 0}
+    .navbtn.active,.navbtn:hover{background:var(--pink2);color:var(--rose);font-weight:650}
+    main{min-width:0}.page-title{font-size:1.45rem;margin:4px 0 5px}.intro{color:var(--muted);margin:0 0 18px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:17px;box-shadow:var(--shadow);min-width:0}
+    .card h3{margin:0 0 12px;font-size:1.02rem}.metric{font-size:1.8rem;font-weight:750;color:var(--rose)}.muted{color:var(--muted);font-size:.9rem}
+    .btn{background:var(--rose);color:white;padding:10px 14px;border-radius:13px;font-weight:650}.btn:hover{filter:brightness(.96)}.btn.soft{background:var(--pink2);color:var(--rose)}.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn.danger{background:#fff0f1;color:#a6374e}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.form{display:grid;gap:10px}.form.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    label{font-size:.84rem;font-weight:650;color:#765d67;display:grid;gap:5px}
+    input,select,textarea{width:100%;border:1px solid var(--line);background:#fffdfd;padding:11px 12px;border-radius:12px;color:var(--ink);outline-color:var(--pink)}
+    textarea{min-height:80px;resize:vertical}.full{grid-column:1/-1}
+    .pet{display:flex;gap:12px;align-items:center}.pet-emoji{width:58px;height:58px;border-radius:20px;background:var(--pink2);display:grid;place-items:center;font-size:30px;flex-shrink:0}
+    .pet h3{margin:0 0 4px}.pet p{margin:0;color:var(--muted);font-size:.88rem}
+    .item{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #f7eaf0;padding:12px 0}.item:last-child{border-bottom:0;padding-bottom:0}
+    .item input[type=checkbox]{width:19px;height:19px;margin-top:2px;accent-color:var(--rose)}.itembody{flex:1;min-width:0}.itembody strong{display:block}.itembody small{color:var(--muted)}
+    .done strong{text-decoration:line-through;color:#a89aa0}.tag{display:inline-block;background:var(--pink2);color:var(--rose);border-radius:999px;padding:4px 8px;font-size:.76rem;margin-top:4px}
+    .empty{text-align:center;padding:24px 12px;color:var(--muted)}.empty .emoji{font-size:34px;display:block;margin-bottom:6px}
+    .section{margin-top:14px}.hidden{display:none!important}.notice{background:#fff4d6;border:1px solid #f4e1a7;border-radius:14px;padding:12px;font-size:.88rem;margin-bottom:14px}
+    .small-btn{background:transparent;color:var(--rose);padding:5px 7px;font-size:.82rem}.item-actions{display:flex;gap:4px}
+    footer{text-align:center;color:var(--muted);font-size:.78rem;padding:24px 0 8px}
+    @media(max-width:720px){.app{padding:11px}.layout{grid-template-columns:1fr;gap:12px}nav{position:static;display:flex;overflow-x:auto;gap:3px;padding:7px;border-radius:17px}.navbtn{width:auto;white-space:nowrap;padding:10px;font-size:.84rem}.grid,.grid.three{grid-template-columns:1fr}.date-pill{display:none}.form.two{grid-template-columns:1fr}.full{grid-column:auto}.page-title{font-size:1.3rem}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand"><div class="logo" aria-hidden="true">🐾</div><div><h1>PawDay</h1><div class="sub">um dia mais feliz para quem você ama</div></div></div>
+    <div class="date-pill" id="todayPill"></div>
+  </header>
+  <div class="layout">
+    <nav aria-label="Menu principal">
+      <button class="navbtn active" data-page="home">🏡 Início</button>
+      <button class="navbtn" data-page="pets">🐶 Meus pets</button>
+      <button class="navbtn" data-page="routine">🗓️ Rotina</button>
+      <button class="navbtn" data-page="food">🥣 Alimentação</button>
+      <button class="navbtn" data-page="health">🩺 Saúde</button>
+      <button class="navbtn" data-page="reminders">🔔 Lembretes</button>
+      <button class="navbtn" data-page="settings">⚙️ Dados</button>
+    </nav>
+    <main>
+      <section id="page-home">
+        <h2 class="page-title">Olá, família pet! 💗</h2><p class="intro">Pequenos cuidados fazem um dia enorme.</p>
+        <div class="grid three">
+          <div class="card"><div class="muted">Meus pets</div><div class="metric" id="metricPets">0</div><div class="muted">amiguinhos cadastrados</div></div>
+          <div class="card"><div class="muted">Tarefas de hoje</div><div class="metric" id="metricTasks">0</div><div class="muted">a fazer na rotina</div></div>
+          <div class="card"><div class="muted">Concluídas</div><div class="metric" id="metricDone">0</div><div class="muted">cuidados de hoje</div></div>
+        </div>
+        <div class="grid section">
+          <div class="card"><h3>🌷 Próximos cuidados</h3><div id="homeTasks"></div><div class="actions"><button class="btn soft" data-goto="routine">Ver rotina</button></div></div>
+          <div class="card"><h3>🐾 Seus companheiros</h3><div id="homePets"></div><div class="actions"><button class="btn soft" data-goto="pets">Gerenciar pets</button></div></div>
+        </div>
+      </section>
 
+      <section id="page-pets" class="hidden">
+        <h2 class="page-title">Meus pets 🐕</h2><p class="intro">Guarde as informações dos seus companheiros.</p>
+        <div class="card"><h3 id="petFormTitle">Adicionar um pet</h3><form id="petForm" class="form two">
+          <input type="hidden" id="petId">
+          <label>Nome do pet<input id="petName" required maxlength="50" placeholder="Ex.: Mel"></label>
+          <label>Animal<select id="petType"><option value="🐶 Cachorro">🐶 Cachorro</option><option value="🐱 Gato">🐱 Gato</option><option value="🐰 Coelho">🐰 Coelho</option><option value="🐦 Pássaro">🐦 Pássaro</option><option value="🐹 Roedor">🐹 Roedor</option><option value="🐢 Réptil">🐢 Réptil</option><option value="🐾 Outro">🐾 Outro</option></select></label>
+          <label>Data de nascimento (opcional)<input type="date" id="petBirth"></label>
+          <label>Observações<textarea id="petNotes" placeholder="Personalidade, cuidados especiais..."></textarea></label>
+          <div class="actions full"><button class="btn" type="submit">Salvar pet</button><button class="btn ghost hidden" type="button" id="cancelPet">Cancelar edição</button></div>
+        </form></div>
+        <div class="grid section" id="petsList"></div>
+      </section>
+
+      <section id="page-routine" class="hidden">
+        <h2 class="page-title">Rotina diária 🗓️</h2><p class="intro">Crie uma rotina simples e marque os cuidados concluídos.</p>
+        <div class="card"><h3>Adicionar tarefa</h3><form id="taskForm" class="form two">
+          <label>O que precisa fazer?<input id="taskName" required maxlength="90" placeholder="Ex.: Passear com a Mel"></label>
+          <label>Pet<select id="taskPet"><option value="">Todos os pets</option></select></label>
+          <label>Horário (opcional)<input type="time" id="taskTime"></label>
+          <label>Tipo<select id="taskCategory"><option>Rotina</option><option>Alimentação</option><option>Passeio</option><option>Higiene</option><option>Saúde</option><option>Brincadeira</option></select></label>
+          <div class="actions full"><button class="btn" type="submit">Adicionar tarefa</button></div>
+        </form></div>
+        <div class="card section"><h3>Tarefas de hoje</h3><div id="tasksList"></div></div>
+      </section>
+
+      <section id="page-food" class="hidden">
+        <h2 class="page-title">Alimentação 🥣</h2><p class="intro">Anote refeições e acompanhe a rotina alimentar.</p>
+        <div class="card"><h3>Registrar refeição</h3><form id="foodForm" class="form two">
+          <label>Pet<select id="foodPet" required><option value="">Selecione um pet</option></select></label>
+          <label>Refeição<select id="foodKind"><option>Café da manhã</option><option>Almoço</option><option>Jantar</option><option>Lanche</option><option>Água</option></select></label>
+          <label>Horário<input type="time" id="foodTime"></label>
+          <label>O que comeu/bebeu?<input id="foodWhat" required maxlength="100" placeholder="Ex.: ração habitual"></label>
+          <label>Quantidade (opcional)<input id="foodAmount" maxlength="50" placeholder="Ex.: conforme orientação"></label>
+          <div class="actions full"><button class="btn" type="submit">Registrar</button></div>
+        </form></div>
+        <div class="card section"><h3>Registros recentes</h3><div id="foodList"></div></div>
+        <div class="notice section">Dica: necessidades alimentares variam conforme espécie, idade e saúde. Para porções e dietas específicas, siga a orientação de um veterinário.</div>
+      </section>
+
+      <section id="page-health" class="hidden">
+        <h2 class="page-title">Saúde e cuidados 🩺</h2><p class="intro">Organize consultas, vacinas e outros registros.</p>
+        <div class="card"><h3>Novo registro de saúde</h3><form id="healthForm" class="form two">
+          <label>Pet<select id="healthPet" required><option value="">Selecione um pet</option></select></label>
+          <label>Tipo<select id="healthKind"><option>Consulta veterinária</option><option>Vacina</option><option>Vermífugo</option><option>Antipulgas</option><option>Medicamento prescrito</option><option>Outro</option></select></label>
+          <label>Data<input type="date" id="healthDate" required></label>
+          <label>Próxima data (opcional)<input type="date" id="healthNext"></label>
+          <label class="full">Detalhes<textarea id="healthDetails" placeholder="Anotações, orientação do veterinário..."></textarea></label>
+          <div class="actions full"><button class="btn" type="submit">Salvar registro</button></div>
+        </form></div>
+        <div class="card section"><h3>Histórico de saúde</h3><div id="healthList"></div></div>
+        <div class="notice section">O PawDay ajuda a organizar informações, mas não substitui o veterinário. Não altere medicamentos ou doses sem orientação profissional.</div>
+      </section>
+
+      <section id="page-reminders" class="hidden">
+        <h2 class="page-title">Lembretes 🔔</h2><p class="intro">Veja os cuidados agendados e os registros com próximas datas.</p>
+        <div class="card"><h3>Lembretes próximos</h3><div id="remindersList"></div><p class="muted">Esta versão mostra os lembretes dentro do aplicativo. Ela não envia notificações em segundo plano.</p></div>
+      </section>
+
+      <section id="page-settings" class="hidden">
+        <h2 class="page-title">Seus dados ⚙️</h2><p class="intro">Faça uma cópia de segurança ou restaure seus dados.</p>
+        <div class="card"><h3>Backup do PawDay</h3><p class="muted">Os dados ficam neste navegador. Exporte um backup regularmente para não perder suas anotações ao trocar de aparelho ou limpar os dados do navegador.</p>
+          <div class="actions"><button class="btn" id="exportBtn">Exportar backup</button><label class="btn soft" style="display:inline-flex;align-items:center;cursor:pointer">Importar backup<input type="file" id="importFile" accept="application/json,.json" hidden></label><button class="btn ghost" id="installBtn">Instalar aplicativo</button></div>
+          <p id="installHelp" class="muted"></p>
+        </div>
+        <div class="card section"><h3>Sobre</h3><p>PawDay — organizador de cuidados para pets, versão inicial.</p><p class="muted">Feito para ajudar na organização. Não envia seus dados a um servidor; eles ficam no armazenamento local deste navegador.</p></div>
+      </section>
+    </main>
+  </div>
+  <footer>Feito com 💗 para quem ama os animais · PawDay</footer>
+</div>
+<script>
+(() => {
+  const KEY='pawday-v1';
+  const $=id=>document.getElementById(id);
+  const today=()=>new Date().toLocaleDateString('en-CA');
+  const fmtDate=s=>s?new Date(s+'T12:00:00').toLocaleDateString('pt-BR'):'Data não informada';
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let data={pets:[],tasks:[],foods:[],health:[]};
+  try { const saved=JSON.parse(localStorage.getItem(KEY)||'null'); if(saved && typeof saved==='object') data={...data,...saved}; } catch(e){}
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){alert('Não foi possível salvar no navegador. Exporte um backup e verifique o espaço disponível.')}};
+  const petName=id=>data.pets.find(p=>p.id===id)?.name||'Todos os pets';
+  const id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+  const empty=(emoji,msg)=>`<div class="empty"><span class="emoji">${emoji}</span>${msg}</div>`;
+  const sortDate=(a,b)=>(b.date||'').localeCompare(a.date||'');
+  function showPage(page){document.querySelectorAll('main section').forEach(s=>s.classList.toggle('hidden',s.id!=='page-'+page));document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));render();}
+  document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+  document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.goto)));
+  $('todayPill').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
+
+  function petOptions(selected=''){return `<option value="">${data.pets.length?'Selecione um pet':'Cadastre um pet primeiro'}</option>`+data.pets.map(p=>`<option value="${esc(p.id)}" ${p.id===selected?'selected':''}>${esc(p.name)}</option>`).join('');}
+  function fillPetSelects(){['taskPet','foodPet','healthPet'].forEach(k=>{const el=$(k),v=el.value;el.innerHTML=(k==='taskPet'?'<option value="">Todos os pets</option>':petOptions(v));if(k==='taskPet'&&v)el.value=v;});}
+  function petCard(p){return `<div class="card"><div class="pet"><div class="pet-emoji">${esc((p.type||'🐾').split(' ')[0])}</div><div style="min-width:0"><h3>${esc(p.name)}</h3><p>${esc(p.type||'Pet')}${p.birth?' · Nasc.: '+fmtDate(p.birth):''}</p></div></div>${p.notes?`<p class="muted" style="margin:12px 0 0">${esc(p.notes)}</p>`:''}<div class="actions"><button class="btn soft" data-edit-pet="${p.id}">Editar</button><button class="btn danger" data-delete-pet="${p.id}">Excluir</button></div></div>`;}
+  function taskRow(t){return `<div class="item ${t.done?'done':''}"><input type="checkbox" aria-label="Marcar tarefa" data-toggle-task="${t.id}" ${t.done?'checked':''}><div class="itembody"><strong>${esc(t.name)}</strong><small>${esc(petName(t.petId))}${t.time?' · '+esc(t.time):''} · ${esc(t.category||'Rotina')}</small></div><div class="item-actions"><button class="small-btn" data-delete-task="${t.id}">Excluir</button></div></div>`;}
+  function render(){
+    fillPetSelects();
+    $('metricPets').textContent=data.pets.length;
+    const tasks=data.tasks.filter(t=>t.date===today());
+    $('metricTasks').textContent=tasks.length;$('metricDone').textContent=tasks.filter(t=>t.done).length;
+    $('homeTasks').innerHTML=tasks.length?tasks.slice(0,5).map(taskRow).join(''):empty('🌸','Nenhuma tarefa para hoje. Adicione uma na rotina!');
+    $('homePets').innerHTML=data.pets.length?data.pets.slice(0,3).map(p=>`<div class="item"><div class="pet-emoji" style="width:42px;height:42px;font-size:22px">${esc((p.type||'🐾').split(' ')[0])}</div><div class="itembody"><strong>${esc(p.name)}</strong><small>${esc(p.type||'Pet')}</small></div></div>`).join(''):empty('🐾','Cadastre seu primeiro pet!');
+    $('petsList').innerHTML=data.pets.length?data.pets.map(petCard).join(''):empty('🐶','Seus pets aparecerão aqui.');
+    $('tasksList').innerHTML=tasks.length?tasks.map(taskRow).join(''):empty('✨','Nenhuma tarefa para hoje.');
+    $('foodList').innerHTML=data.foods.length?data.foods.slice().sort(sortDate).slice(0,30).map(f=>`<div class="item"><div class="pet-emoji" style="width:42px;height:42px;font-size:21px">🥣</div><div class="itembody"><strong>${esc(f.kind)} · ${esc(petName(f.petId))}</strong><small>${fmtDate(f.date)}${f.time?' · '+esc(f.time):''}<br>${esc(f.what)}${f.amount?' · '+esc(f.amount):''}</small></div><button class="small-btn" data-delete-food="${f.id}">Excluir</button></div>`).join(''):empty('🥕','Nenhuma refeição registrada.');
+    $('healthList').innerHTML=data.health.length?data.health.slice().sort(sortDate).map(h=>`<div class="item"><div class="pet-emoji" style="width:42px;height:42px;font-size:21px">🩺</div><div class="itembody"><strong>${esc(h.kind)} · ${esc(petName(h.petId))}</strong><small>${fmtDate(h.date)}${h.next?' · Próxima: '+fmtDate(h.next):''}${h.details?'<br>'+esc(h.details):''}</small></div><button class="small-btn" data-delete-health="${h.id}">Excluir</button></div>`).join(''):empty('💗','Seus registros de saúde aparecerão aqui.');
+    const reminders=[];
+    data.health.filter(h=>h.next).forEach(h=>reminders.push({date:h.next,text:`${h.kind} — ${petName(h.petId)}`,kind:'Saúde'}));
+    data.tasks.filter(t=>t.date>=today()&&!t.done).forEach(t=>reminders.push({date:t.date,text:t.name,kind:'Rotina',time:t.time}));
+    reminders.sort((a,b)=>a.date.localeCompare(b.date));
+    $('remindersList').innerHTML=reminders.length?reminders.map(r=>`<div class="item"><div class="pet-emoji" style="width:42px;height:42px;font-size:21px">🔔</div><div class="itembody"><strong>${esc(r.text)}</strong><small>${fmtDate(r.date)}${r.time?' · '+esc(r.time):''}</small><br><span class="tag">${esc(r.kind)}</span></div></div>`).join(''):empty('🌼','Não há lembretes próximos.');
+    bindDynamic();
+  }
+  function bindDynamic(){
+    document.querySelectorAll('[data-toggle-task]').forEach(el=>el.onclick=()=>{const t=data.tasks.find(t=>t.id===el.dataset.toggleTask);if(t){t.done=el.checked;save();render();}});
+    document.querySelectorAll('[data-delete-task]').forEach(el=>el.onclick=()=>{if(confirm('Excluir esta tarefa?')){data.tasks=data.tasks.filter(t=>t.id!==el.dataset.deleteTask);save();render();}});
+    document.querySelectorAll('[data-edit-pet]').forEach(el=>el.onclick=()=>{const p=data.pets.find(p=>p.id===el.dataset.editPet);if(!p)return;$('petId').value=p.id;$('petName').value=p.name;$('petType').value=p.type;$('petBirth').value=p.birth||'';$('petNotes').value=p.notes||'';$('petFormTitle').textContent='Editar pet';$('cancelPet').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});});
+    document.querySelectorAll('[data-delete-pet]').forEach(el=>el.onclick=()=>{if(confirm('Excluir este pet? Os registros relacionados não serão apagados.')){data.pets=data.pets.filter(p=>p.id!==el.dataset.deletePet);save();render();}});
+    document.querySelectorAll('[data-delete-food]').forEach(el=>el.onclick=()=>{data.foods=data.foods.filter(f=>f.id!==el.dataset.deleteFood);save();render();});
+    document.querySelectorAll('[data-delete-health]').forEach(el=>el.onclick=()=>{data.health=data.health.filter(h=>h.id!==el.dataset.deleteHealth);save();render();});
+  }
+  $('petForm').addEventListener('submit',e=>{e.preventDefault();const pid=$('petId').value;const p={id:pid||id(),name:$('petName').value.trim(),type:$('petType').value,birth:$('petBirth').value,notes:$('petNotes').value.trim()};if(pid)data.pets=data.pets.map(x=>x.id===pid?p:x);else data.pets.push(p);save();$('petForm').reset();$('petId').value='';$('petFormTitle').textContent='Adicionar um pet';$('cancelPet').classList.add('hidden');render();});
+  $('cancelPet').onclick=()=>{$('petForm').reset();$('petId').value='';$('petFormTitle').textContent='Adicionar um pet';$('cancelPet').classList.add('hidden');};
+  $('taskForm').addEventListener('submit',e=>{e.preventDefault();data.tasks.push({id:id(),name:$('taskName').value.trim(),petId:$('taskPet').value,time:$('taskTime').value,category:$('taskCategory').value,date:today(),done:false});save();$('taskForm').reset();render();});
+  $('foodForm').addEventListener('submit',e=>{e.preventDefault();if(!data.pets.some(p=>p.id===$('foodPet').value)){alert('Cadastre e selecione um pet primeiro.');return;}data.foods.push({id:id(),petId:$('foodPet').value,kind:$('foodKind').value,time:$('foodTime').value,what:$('foodWhat').value.trim(),amount:$('foodAmount').value.trim(),date:today()});save();$('foodForm').reset();render();});
+  $('healthForm').addEventListener('submit',e=>{e.preventDefault();if(!data.pets.some(p=>p.id===$('healthPet').value)){alert('Cadastre e selecione um pet primeiro.');return;}data.health.push({id:id(),petId:$('healthPet').value,kind:$('healthKind').value,date:$('healthDate').value,next:$('healthNext').value,details:$('healthDetails').value.trim()});save();$('healthForm').reset();$('healthDate').value=today();render();});
+  $('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pawday-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href);};
+  $('importFile').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{const parsed=JSON.parse(await file.text());if(!parsed||!Array.isArray(parsed.pets)||!Array.isArray(parsed.tasks)||!Array.isArray(parsed.foods)||!Array.isArray(parsed.health))throw Error();if(confirm('Importar substituirá os dados atuais. Continuar?')){data=parsed;save();render();alert('Backup importado!');}}catch(err){alert('Arquivo inválido. Escolha um backup JSON exportado pelo PawDay.');}e.target.value='';};
+  let installPrompt=null;
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('installHelp').textContent='Seu navegador permite instalar o PawDay.';});
+  $('installBtn').onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;}else{$('installHelp').textContent='No Android, abra este site no Chrome, toque no menu ⋮ e escolha “Instalar app” ou “Adicionar à tela inicial”. Se a opção não aparecer, confirme que o site está em HTTPS.';}};
+  $('healthDate').value=today();
+  if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+  render();
+})();
+</script>
+</body>
+</html>
